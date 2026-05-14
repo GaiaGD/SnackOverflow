@@ -1,0 +1,78 @@
+import { createClient, EntryFieldTypes, Entry, EntrySkeletonType } from 'contentful';
+
+export const contentfulClient = createClient({
+  space: process.env.CONTENTFUL_SPACE_ID!,
+  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN!,
+});
+
+export const contentfulPreviewClient = createClient({
+  space: process.env.CONTENTFUL_SPACE_ID!,
+  accessToken: process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN!,
+  host: 'preview.contentful.com',
+});
+
+// ---------- Entry Skeletons (contentful v10+ pattern) ----------
+
+export interface ReviewSkeleton extends EntrySkeletonType {
+  contentTypeId: 'review';
+  fields: {
+    authorName: EntryFieldTypes.Symbol;
+    authorTitle: EntryFieldTypes.Symbol;
+    quote: EntryFieldTypes.Text;
+    starRating: EntryFieldTypes.Integer;
+  };
+}
+
+export interface HeroBlockSkeleton extends EntrySkeletonType {
+  contentTypeId: 'heroBlock';
+  fields: {
+    headline: EntryFieldTypes.Symbol;
+    subheadline: EntryFieldTypes.Symbol;
+    ctaText: EntryFieldTypes.Symbol;
+    ctaUrl: EntryFieldTypes.Symbol;
+  };
+}
+
+export interface ReviewsBlockSkeleton extends EntrySkeletonType {
+  contentTypeId: 'reviewsBlock';
+  fields: {
+    title: EntryFieldTypes.Symbol;
+    reviews: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<ReviewSkeleton>>;
+  };
+}
+
+export interface LandingPageSkeleton extends EntrySkeletonType {
+  contentTypeId: 'landingPage';
+  fields: {
+    title: EntryFieldTypes.Symbol;
+    slug: EntryFieldTypes.Symbol;
+    blocks: EntryFieldTypes.Array<
+      EntryFieldTypes.EntryLink<HeroBlockSkeleton | ReviewsBlockSkeleton>
+    >;
+  };
+}
+
+// ---------- Typed Entry aliases ----------
+
+export type HeroBlockEntry = Entry<HeroBlockSkeleton>;
+export type ReviewsBlockEntry = Entry<ReviewsBlockSkeleton>;
+export type ReviewEntry = Entry<ReviewSkeleton>;
+export type LandingPageEntry = Entry<LandingPageSkeleton>;
+
+// ---------- Fetch helpers ----------
+
+export async function getLandingPageBySlug(
+  slug: string,
+  preview = false
+): Promise<LandingPageEntry | null> {
+  const client = preview ? contentfulPreviewClient : contentfulClient;
+
+  const result = await client.getEntries<LandingPageSkeleton>({
+    content_type: 'landingPage',
+    'fields.slug': slug,
+    include: 3,
+    limit: 1,
+  });
+
+  return (result.items[0] as LandingPageEntry) ?? null;
+}

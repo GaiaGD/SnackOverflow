@@ -14,6 +14,8 @@ export async function generateStaticParams() {
 
 export default async function KnowledgeArticlePage({
   params,
+}: {
+  params: { slug: string };
 }) {
   const { isEnabled } = draftMode();
   const article = await getArticle(params.slug, isEnabled);
@@ -45,7 +47,7 @@ export default async function KnowledgeArticlePage({
             <div className="space-y-4 md:space-y-6">
               <div className="space-y-2">
                 <div className="max-w-[900px] text-zinc-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-zinc-400">
-                  {documentToReactComponents(article.details.json)}
+                  {documentToReactComponents(article.details.json as Parameters<typeof documentToReactComponents>[0])}
                 </div>
               </div>
             </div>
