@@ -34,7 +34,8 @@ export default function ReviewCard({ authorName, authorTitle, quote, starRating,
     <article
       aria-roledescription="slide"
       aria-label={`${authorName}, review ${index + 1} of ${total}`}
-      className="flex-none w-80 rounded-2xl bg-white p-6 shadow-sm"
+      tabIndex={0}
+      className="w-80 rounded-2xl bg-white p-6 shadow-sm"
     >
       <StarRating rating={starRating} />
       {quote && (
@@ -45,7 +46,7 @@ export default function ReviewCard({ authorName, authorTitle, quote, starRating,
       <footer className="mt-4">
         <p className="font-semibold text-brand-navy text-sm">{authorName}</p>
         {authorTitle && (
-          <p className="text-brand-navy/50 text-xs">{authorTitle}</p>
+          <p className="text-brand-navy/70 text-xs">{authorTitle}</p>
         )}
       </footer>
     </article>

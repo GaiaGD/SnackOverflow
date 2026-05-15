@@ -35,7 +35,9 @@ export default function ReviewsCarousel({ title, reviews }: ReviewsCarouselProps
 
         <Carousel label="Customer reviews" slideCount={reviews.length}>
           {reviews.map((review, i) => (
-            <ReviewCard key={review.id} {...review} index={i} total={reviews.length} />
+            <li key={review.id} className="flex-none">
+              <ReviewCard {...review} index={i} total={reviews.length} />
+            </li>
           ))}
         </Carousel>
       </div>

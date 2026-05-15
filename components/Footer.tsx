@@ -14,7 +14,7 @@ export default function Footer() {
           <a href="#" className="text-sm text-white hover:opacity-75 transition-opacity">Careers</a>
         </nav>
 
-        <p className="text-xs text-white/30">
+        <p className="text-xs text-white/60">
           © {new Date().getFullYear()} SnackOverflow. All rights reserved.
         </p>
       </div>

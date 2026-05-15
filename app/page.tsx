@@ -1,7 +1,7 @@
 import { Climate_Crisis } from 'next/font/google';
 import Link from 'next/link';
 
-const climateCrisis = Climate_Crisis({ subsets: ['latin'] });
+const climateCrisis = Climate_Crisis({ subsets: ['latin'], display: 'optional' });
 
 export default function Home() {
   return (

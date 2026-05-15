@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, ChangeEvent, FormEvent } from 'react';
+import { useState, useRef, useId, ChangeEvent, FormEvent, cloneElement, isValidElement } from 'react';
 
 type CompanySize = '1-50' | '51-200' | '201-500' | '501-1000' | '1000+';
 type Department =
@@ -341,13 +341,14 @@ function Field({
   errorId?: string;
   children: React.ReactNode;
 }) {
+  const id = useId();
   return (
     <div className="space-y-1">
-      <label className="block text-sm font-medium text-white/80">
+      <label htmlFor={id} className="block text-sm font-medium text-white/80">
         {label}
         {required && <span className="ml-0.5 text-white"> *</span>}
       </label>
-      {children}
+      {isValidElement(children) ? cloneElement(children as React.ReactElement, { id }) : children}
       {error && (
         <p id={errorId} role="alert" className="text-xs text-red-400 mt-1">
           {error}

@@ -15,7 +15,7 @@ Pages are fetched server-side using Contentful's REST client and statically cach
 The balance: page loads are fast because they serve pre-rendered HTML from the CDN edge. Marketing's speed-to-publish is handled by on-demand revalidation, not by shrinking the revalidation window.
 
 ### Performance
-- **Server components by default**: all data fetching is server-side. `'use client'` is scoped only to components that need browser APIs — HeroBlock (modal state), ReviewsCarousel (scroll/keyboard), LeadCaptureForm (form state).
+- **Server components by default**: all data fetching is server-side. `'use client'` is scoped only to components that need browser APIs — ReviewsCarousel (Embla scroll/keyboard), LeadCaptureForm (form state).
 - **Image optimization**: `next/image` is configured with Contentful's CDN (`images.ctfassets.net`) whitelisted in `remotePatterns`. Plain `<img>` tags should not be used.
 - **Loading state**: `app/[slug]/loading.tsx` provides a skeleton mirroring the Hero + Reviews layout, shown automatically by Next.js on cache misses.
 
@@ -24,11 +24,13 @@ The balance: page loads are fast because they serve pre-rendered HTML from the C
 ## Execution of Business Goals
 
 ### Reviews Carousel — Accessibility
-- `role="region"` with `aria-label="Customer reviews"` scopes the landmark for screen readers.
-- The scroll track is a `<ul role="list">` with each card as `<li role="listitem">` — correct semantics for a navigable collection.
-- Cards are `tabIndex={0}` and keyboard-navigable via `ArrowLeft`/`ArrowRight`, handled via a `keydown` listener on the track.
+- `aria-roledescription="carousel"` with `aria-label="Customer reviews"` scopes the landmark for screen readers.
+- The slide track is a `<ul>` with each card wrapped in a `<li>` — correct semantics for a navigable collection.
+- Cards are `article` elements with `tabIndex={0}` and `aria-roledescription="slide"`, making each card individually focusable and announced correctly by screen readers.
+- Prev/Next buttons are `disabled` when the carousel reaches either end, preventing dead interactions.
+- Arrow key navigation (`ArrowLeft`/`ArrowRight`) is handled via a `keydown` listener on the carousel wrapper.
 - Star ratings use `role="img"` with `aria-label="{n} out of 5 stars"`; individual SVG stars are `aria-hidden`.
-- `prefers-reduced-motion` is respected — scroll behavior switches from `smooth` to `instant`.
+- `prefers-reduced-motion` is respected — Embla's scroll duration is set to `0` when the preference is detected.
 
 ### Reviews Carousel — Top-of-Funnel
 - JSON-LD structured data (`schema.org/Review`) is injected per-carousel, enabling Google to surface star ratings as rich snippets in search results, directly increasing organic CTR.

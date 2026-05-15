@@ -64,9 +64,9 @@ export default function Carousel({ children, label, slideCount }: CarouselProps)
       </span>
 
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex gap-6 pb-4">
+        <ul className="flex gap-6 pb-4 list-none">
           {children}
-        </div>
+        </ul>
       </div>
 
       <button
