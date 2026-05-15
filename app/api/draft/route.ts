@@ -1,4 +1,4 @@
-import { getArticle } from "@/lib/api";
+import { getLandingPageBySlug } from "@/lib/contentful";
 import { draftMode } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -15,12 +15,12 @@ export async function GET(request: Request) {
     return new Response("Invalid token", { status: 401 });
   }
 
-  const article = await getArticle(slug);
+  const page = await getLandingPageBySlug(slug, true);
 
-  if (!article) {
-    return new Response("Article not found", { status: 404 });
+  if (!page) {
+    return new Response("Page not found", { status: 404 });
   }
 
   draftMode().enable();
-  redirect(`/articles/${article.slug}`);
+  redirect(`/${slug}`);
 }
