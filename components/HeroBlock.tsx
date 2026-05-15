@@ -12,6 +12,11 @@ interface HeroBlockProps {
 }
 
 export default function HeroBlock({ headline, subheadline, ctaText, ctaUrl, backgroundImageUrl }: HeroBlockProps) {
+  const rawHref = ctaUrl || '#lead-form';
+  const isExternal = /^https?:\/\//i.test(rawHref);
+  const isRelative = rawHref.startsWith('#') || rawHref.startsWith('/');
+  const href = !isExternal && !isRelative ? `https://${rawHref}` : rawHref;
+
   return (
     <section className="relative overflow-hidden bg-brand-navy py-24 px-6">
       {backgroundImageUrl && (
@@ -38,7 +43,9 @@ export default function HeroBlock({ headline, subheadline, ctaText, ctaUrl, back
           </p>
         )}
         <a
-          href={ctaUrl || '#lead-form'}
+          href={href}
+          target={isExternal ? '_blank' : undefined}
+          rel={isExternal ? 'noopener noreferrer' : undefined}
           className="inline-flex items-center justify-center rounded-2xl bg-brand-yellow px-8 py-4 text-base font-semibold text-brand-navy shadow-lg hover:bg-brand-mustard focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow transition-colors duration-200"
         >
           {ctaText || 'Get a Demo'}
