@@ -6,6 +6,11 @@ export interface Review {
   starRating: number;
 }
 
+interface ReviewCardProps extends Review {
+  index: number;
+  total: number;
+}
+
 function StarRating({ rating }: { rating: number }) {
   return (
     <div role="img" aria-label={`${rating} out of 5 stars`} className="flex gap-0.5">
@@ -24,9 +29,13 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
-export default function ReviewCard({ authorName, authorTitle, quote, starRating }: Review) {
+export default function ReviewCard({ authorName, authorTitle, quote, starRating, index, total }: ReviewCardProps) {
   return (
-    <article className="flex-none w-80 rounded-2xl border border-brand-teal/30 bg-white/10 p-6 shadow-sm">
+    <article
+      aria-roledescription="slide"
+      aria-label={`${authorName}, review ${index + 1} of ${total}`}
+      className="flex-none w-80 rounded-2xl border border-brand-teal/30 bg-white/10 p-6 shadow-sm"
+    >
       <StarRating rating={starRating} />
       <blockquote className="mt-4 text-white/80 text-sm leading-relaxed">
         {quote}

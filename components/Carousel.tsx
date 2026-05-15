@@ -1,21 +1,58 @@
 'use client';
 
 import useEmblaCarousel from 'embla-carousel-react';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface CarouselProps {
   children: React.ReactNode;
   label?: string;
+  slideCount?: number;
 }
 
-export default function Carousel({ children, label }: CarouselProps) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ align: 'start', dragFree: true });
+export default function Carousel({ children, label, slideCount }: CarouselProps) {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ align: 'start' });
+  const [liveText, setLiveText] = useState('');
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      emblaApi.reInit({ duration: 0 });
+    }
+
+    const onSelect = () => {
+      const i = emblaApi.selectedScrollSnap();
+      if (slideCount) setLiveText(`Item ${i + 1} of ${slideCount}`);
+    };
+
+    emblaApi.on('select', onSelect);
+    return () => { emblaApi.off('select', onSelect); };
+  }, [emblaApi, slideCount]);
+
+  // Arrow keys work when any element inside the carousel is focused
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); scrollPrev(); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); scrollNext(); }
+    },
+    [scrollPrev, scrollNext]
+  );
+
   return (
-    <div role="region" aria-label={label} className="relative">
+    <div
+      aria-roledescription="carousel"
+      aria-label={label}
+      className="relative"
+      onKeyDown={handleKeyDown}
+    >
+      {/* Polite announcement on slide change for screen readers */}
+      <span aria-live="polite" aria-atomic="true" className="sr-only">
+        {liveText}
+      </span>
+
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-6 px-2 pb-4">
           {children}

@@ -30,9 +30,9 @@ export default function ReviewsCarousel({ title, reviews }: ReviewsCarouselProps
       <div className="mx-auto max-w-5xl space-y-8">
         <h2 className="text-3xl font-bold text-brand-yellow text-center">{title}</h2>
 
-        <Carousel label="Customer reviews">
-          {reviews.map((review) => (
-            <ReviewCard key={review.id} {...review} />
+        <Carousel label="Customer reviews" slideCount={reviews.length}>
+          {reviews.map((review, i) => (
+            <ReviewCard key={review.id} {...review} index={i} total={reviews.length} />
           ))}
         </Carousel>
       </div>
