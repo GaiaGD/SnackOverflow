@@ -1,9 +1,9 @@
 export interface Review {
   id: string;
-  authorName: string;
-  authorTitle: string;
-  quote: string;
-  starRating: number;
+  authorName: string;           // required in Contentful
+  starRating: number;           // required in Contentful
+  authorTitle?: string;
+  quote?: string;
 }
 
 interface ReviewCardProps extends Review {
@@ -18,7 +18,7 @@ function StarRating({ rating }: { rating: number }) {
         <svg
           key={i}
           aria-hidden="true"
-          className={`w-5 h-5 ${i < rating ? 'text-brand-yellow' : 'text-white/20'}`}
+          className={`w-5 h-5 ${i < rating ? 'text-brand-teal' : 'text-white/50'}`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -34,15 +34,19 @@ export default function ReviewCard({ authorName, authorTitle, quote, starRating,
     <article
       aria-roledescription="slide"
       aria-label={`${authorName}, review ${index + 1} of ${total}`}
-      className="flex-none w-80 rounded-2xl border border-brand-teal/30 bg-white/10 p-6 shadow-sm"
+      className="flex-none w-80 rounded-2xl bg-brand-yellow p-6 shadow-sm"
     >
       <StarRating rating={starRating} />
-      <blockquote className="mt-4 text-white/80 text-sm leading-relaxed">
-        {quote}
-      </blockquote>
+      {quote && (
+        <blockquote className="mt-4 text-brand-purple/80 text-sm leading-relaxed">
+          {quote}
+        </blockquote>
+      )}
       <footer className="mt-4">
-        <p className="font-semibold text-brand-teal text-sm">{authorName}</p>
-        <p className="text-white/50 text-xs">{authorTitle}</p>
+        <p className="font-semibold text-brand-purple text-sm">{authorName}</p>
+        {authorTitle && (
+          <p className="text-brand-purple/50 text-xs">{authorTitle}</p>
+        )}
       </footer>
     </article>
   );

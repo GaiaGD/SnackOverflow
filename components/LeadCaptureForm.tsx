@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, useRef, ChangeEvent, FormEvent } from 'react';
 
 type CompanySize = '1-50' | '51-200' | '201-500' | '501-1000' | '1000+';
 type Department =
@@ -12,6 +12,7 @@ type Department =
   | 'Marketing'
   | 'Other';
 type ProductInterest = 'C.A.R.B. Fleet' | 'PantryOS' | 'CrumbTrail Analytics';
+type Status = 'idle' | 'loading' | 'success' | 'error';
 
 interface FormState {
   firstName: string;
@@ -28,31 +29,25 @@ type SalesPod = 'smb_pod' | 'enterprise_pod' | 'hardware_specialist_pod';
 
 function computeSalesRoutingPods(state: FormState): SalesPod[] {
   const pods: SalesPod[] = [];
-
   const isEnterprise =
     state.companySize === '501-1000' ||
     state.companySize === '1000+' ||
     state.productInterests.includes('CrumbTrail Analytics');
-
   pods.push(isEnterprise ? 'enterprise_pod' : 'smb_pod');
-
-  if (state.productInterests.includes('C.A.R.B. Fleet')) {
-    pods.push('hardware_specialist_pod');
-  }
-
+  if (state.productInterests.includes('C.A.R.B. Fleet')) pods.push('hardware_specialist_pod');
   return pods;
+}
+
+function validateEmail(email: string): string {
+  if (!email) return 'Work email is required.';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Please enter a valid email address.';
+  return '';
 }
 
 const PRODUCT_OPTIONS: ProductInterest[] = ['C.A.R.B. Fleet', 'PantryOS', 'CrumbTrail Analytics'];
 const COMPANY_SIZES: CompanySize[] = ['1-50', '51-200', '201-500', '501-1000', '1000+'];
 const DEPARTMENTS: Department[] = [
-  'Engineering',
-  'Finance',
-  'HR',
-  'Operations',
-  'Sales',
-  'Marketing',
-  'Other',
+  'Engineering', 'Finance', 'HR', 'Operations', 'Sales', 'Marketing', 'Other',
 ];
 
 const INITIAL_STATE: FormState = {
@@ -72,10 +67,15 @@ interface LeadCaptureFormProps {
 
 export default function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<Status>('idle');
+  const [submitError, setSubmitError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [emailTouched, setEmailTouched] = useState(false);
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
   const showFinanceAck = form.department === 'Finance';
   const showCarbFloorAck = form.productInterests.includes('C.A.R.B. Fleet');
+  const isLoading = status === 'loading';
 
   function setField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -90,33 +90,73 @@ export default function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
     }));
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleEmailBlur() {
+    setEmailTouched(true);
+    setEmailError(validateEmail(form.workEmail));
+  }
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const payload = {
-      first_name: form.firstName,
-      last_name: form.lastName,
-      work_email: form.workEmail,
-      company_size: form.companySize,
-      department: form.department,
-      product_interests: form.productInterests,
-      ...(showFinanceAck && { finance_ack: form.financeAck }),
-      ...(showCarbFloorAck && { carb_floor_ack: form.carbFloorAck }),
-      sales_routing_pods: computeSalesRoutingPods(form),
-    };
+    const emailErr = validateEmail(form.workEmail);
+    if (emailErr) {
+      setEmailTouched(true);
+      setEmailError(emailErr);
+      emailInputRef.current?.focus();
+      return;
+    }
 
-    console.log(JSON.stringify(payload, null, 2));
-    setSubmitted(true);
-    onSuccess?.();
+    setStatus('loading');
+    setSubmitError('');
+
+    try {
+      const payload = {
+        first_name: form.firstName,
+        last_name: form.lastName,
+        work_email: form.workEmail,
+        company_size: form.companySize,
+        department: form.department,
+        product_interests: form.productInterests,
+        ...(showFinanceAck && { finance_ack: form.financeAck }),
+        ...(showCarbFloorAck && { carb_floor_ack: form.carbFloorAck }),
+        sales_routing_pods: computeSalesRoutingPods(form),
+      };
+
+      // Simulated API call — replace with real CRM POST
+      await new Promise<void>((resolve) => setTimeout(resolve, 1000));
+      console.log(JSON.stringify(payload, null, 2));
+
+      setStatus('success');
+      onSuccess?.();
+    } catch {
+      setStatus('error');
+      setSubmitError('Something went wrong. Please try again.');
+    }
   }
 
-  if (submitted) {
+  if (status === 'success') {
     return (
-      <p className="text-center text-brand-teal py-8 text-lg font-semibold">
-        Thanks! We&apos;ll be in touch shortly.
-      </p>
+      <div className="text-center py-10 space-y-4">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brand-teal/20 text-brand-teal text-3xl font-bold">
+          ✓
+        </div>
+        <h3 className="text-xl font-bold text-brand-yellow">You&apos;re all set!</h3>
+        <p className="text-white/70 max-w-sm mx-auto">
+          Thanks for reaching out. Our team will be in touch within 1 business day.
+        </p>
+      </div>
     );
   }
+
+  const isSubmitDisabled =
+    isLoading ||
+    !form.firstName ||
+    !form.lastName ||
+    !form.workEmail ||
+    !form.companySize ||
+    !form.department ||
+    (showFinanceAck && !form.financeAck) ||
+    (showCarbFloorAck && !form.carbFloorAck);
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-5">
@@ -143,14 +183,21 @@ export default function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
         </Field>
       </div>
 
-      <Field label="Work Email" required>
+      <Field label="Work Email" required error={emailTouched ? emailError : ''} errorId="email-error">
         <input
+          ref={emailInputRef}
           type="email"
           required
-          autoComplete="work email"
+          autoComplete="email"
           value={form.workEmail}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setField('workEmail', e.target.value)}
-          className={inputCls}
+          aria-invalid={emailTouched && !!emailError}
+          aria-describedby={emailTouched && emailError ? 'email-error' : undefined}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            setField('workEmail', e.target.value);
+            if (emailTouched) setEmailError(validateEmail(e.target.value));
+          }}
+          onBlur={handleEmailBlur}
+          className={`${inputCls} ${emailTouched && emailError ? 'border-red-400 focus:border-red-400 focus:ring-red-400/30' : ''}`}
         />
       </Field>
 
@@ -235,14 +282,46 @@ export default function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
         </label>
       )}
 
+      {status === 'error' && (
+        <p role="alert" className="text-sm text-red-400 text-center">
+          {submitError}
+        </p>
+      )}
+
       <button
-        disabled={!form.firstName || !form.lastName || !form.workEmail || !form.companySize || !form.department || (showFinanceAck && !form.financeAck) || (showCarbFloorAck && !form.carbFloorAck)}
         type="submit"
-        className="w-full rounded-xl bg-brand-teal px-6 py-3 text-sm font-semibold text-brand-purple shadow transition-opacity enabled:hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal disabled:cursor-not-allowed disabled:opacity-40"
+        disabled={isSubmitDisabled}
+        aria-busy={isLoading}
+        className="w-full rounded-xl bg-brand-teal px-6 py-3 text-sm font-semibold text-brand-purple shadow transition-opacity enabled:hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal disabled:cursor-not-allowed disabled:opacity-40 flex items-center justify-center gap-2"
       >
-        Request Demo
+        {isLoading ? (
+          <>
+            <Spinner />
+            Submitting…
+          </>
+        ) : (
+          'Request Demo'
+        )}
       </button>
     </form>
+  );
+}
+
+function Spinner() {
+  return (
+    <svg
+      aria-hidden="true"
+      className="w-4 h-4 animate-spin"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      />
+    </svg>
   );
 }
 
@@ -252,10 +331,14 @@ const inputCls =
 function Field({
   label,
   required,
+  error,
+  errorId,
   children,
 }: {
   label: string;
   required?: boolean;
+  error?: string;
+  errorId?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -265,6 +348,11 @@ function Field({
         {required && <span className="ml-0.5 text-brand-yellow"> *</span>}
       </label>
       {children}
+      {error && (
+        <p id={errorId} role="alert" className="text-xs text-red-400 mt-1">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

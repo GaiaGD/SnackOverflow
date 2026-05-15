@@ -62,14 +62,14 @@ export default function Carousel({ children, label, slideCount }: CarouselProps)
       <button
         onClick={scrollPrev}
         aria-label="Previous slide"
-        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-teal"
+        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-brand-teal text-white hover:bg-brand-teal/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-teal"
       >
         ‹
       </button>
       <button
         onClick={scrollNext}
         aria-label="Next slide"
-        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-teal"
+        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-brand-teal text-white hover:bg-brand-teal/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-teal"
       >
         ›
       </button>

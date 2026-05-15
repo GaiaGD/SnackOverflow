@@ -13,7 +13,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const page = await getLandingPageBySlug(params.slug).catch(() => null);
 
-  const title = str(page?.fields.seoTitle) || str(page?.fields.title) || 'SnackOverflow';
+  const title = str(page?.fields.seoTitle) || 'SnackOverflow';
   const description = str(page?.fields.seoDescription) || '';
 
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? '').replace(/\/$/, '');
@@ -47,6 +47,14 @@ function str(val: unknown): string {
     return typeof first === 'string' ? first : '';
   }
   return '';
+}
+
+function assetUrl(val: unknown): string | undefined {
+  if (!val || typeof val !== 'object') return undefined;
+  const file = ((val as Record<string, unknown>).fields as Record<string, unknown> | undefined)?.file as Record<string, unknown> | undefined;
+  const url = file?.url as string | undefined;
+  if (!url) return undefined;
+  return url.startsWith('//') ? `https:${url}` : url;
 }
 
 function num(val: unknown): number {
@@ -84,30 +92,35 @@ export default async function LandingPage({ params }: { params: { slug: string }
         const contentTypeId = block.sys.contentType?.sys?.id;
 
         if (contentTypeId === 'heroBlock') {
+          const headline = str(block.fields.headline);
+          if (!headline) return null;
           return (
             <HeroBlock
               key={block.sys.id}
-              headline={str(block.fields.headline)}
-              subheadline={str(block.fields.subheadline)}
-              ctaText={str(block.fields.ctaText)}
-              ctaUrl={str(block.fields.ctaUrl) || '#'}
+              headline={headline}
+              subheadline={str(block.fields.subheadline) || undefined}
+              ctaText={str(block.fields.ctaText) || undefined}
+              ctaUrl={str(block.fields.ctaUrl) || undefined}
+              backgroundImageUrl={assetUrl(block.fields.backgroundImage)}
             />
           );
         }
 
         if (contentTypeId === 'reviewsBlock') {
           const rawReviews = (block.fields.reviews as RawReview[] | undefined) ?? [];
-          const reviews: Review[] = rawReviews.map((r) => ({
-            id: r.sys.id,
-            authorName: str(r.fields.authorName),
-            authorTitle: str(r.fields.authorTitle),
-            quote: str(r.fields.quote),
-            starRating: num(r.fields.starRating),
-          }));
+          const reviews: Review[] = rawReviews
+            .filter((r) => str(r.fields.authorName) && num(r.fields.starRating) > 0)
+            .map((r) => ({
+              id: r.sys.id,
+              authorName: str(r.fields.authorName),
+              starRating: num(r.fields.starRating),
+              authorTitle: str(r.fields.authorTitle) || undefined,
+              quote: str(r.fields.quote) || undefined,
+            }));
           return (
             <ReviewsCarousel
               key={block.sys.id}
-              title={str(block.fields.title)}
+              title={str(block.fields.title) || undefined}
               reviews={reviews}
             />
           );
@@ -117,7 +130,7 @@ export default async function LandingPage({ params }: { params: { slug: string }
           return (
             <LeadCaptureSection
               key={block.sys.id}
-              title={str(block.fields.title)}
+              title={str(block.fields.title) || undefined}
             />
           );
         }

@@ -16,46 +16,47 @@ export const contentfulPreviewClient = createClient({
 export interface ReviewSkeleton extends EntrySkeletonType {
   contentTypeId: 'review';
   fields: {
-    authorName: EntryFieldTypes.Symbol;
-    authorTitle: EntryFieldTypes.Symbol;
-    quote: EntryFieldTypes.Text;
-    starRating: EntryFieldTypes.Integer;
+    authorName: EntryFieldTypes.Symbol;       // required in Contentful
+    starRating: EntryFieldTypes.Integer;       // required in Contentful
+    authorTitle?: EntryFieldTypes.Symbol;
+    quote?: EntryFieldTypes.Text;
   };
 }
 
 export interface HeroBlockSkeleton extends EntrySkeletonType {
   contentTypeId: 'heroBlock';
   fields: {
-    headline: EntryFieldTypes.Symbol;
-    subheadline: EntryFieldTypes.Symbol;
-    ctaText: EntryFieldTypes.Symbol;
-    ctaUrl: EntryFieldTypes.Symbol;
+    headline: EntryFieldTypes.Symbol;          // required in Contentful
+    subheadline?: EntryFieldTypes.Symbol;
+    ctaText?: EntryFieldTypes.Symbol;
+    ctaUrl?: EntryFieldTypes.Symbol;
+    backgroundImage?: EntryFieldTypes.AssetLink;
   };
 }
 
 export interface ReviewsBlockSkeleton extends EntrySkeletonType {
   contentTypeId: 'reviewsBlock';
   fields: {
-    title: EntryFieldTypes.Symbol;
-    reviews: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<ReviewSkeleton>>;
+    title?: EntryFieldTypes.Symbol;
+    reviews?: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<ReviewSkeleton>>;
   };
 }
 
 export interface LeadCaptureBlockSkeleton extends EntrySkeletonType {
   contentTypeId: 'leadCaptureBlock';
   fields: {
-    title: EntryFieldTypes.Symbol;
+    title?: EntryFieldTypes.Symbol;
   };
 }
 
 export interface LandingPageSkeleton extends EntrySkeletonType {
   contentTypeId: 'landingPage';
   fields: {
-    title: EntryFieldTypes.Symbol;
-    slug: EntryFieldTypes.Symbol;
-    seoTitle: EntryFieldTypes.Symbol;
-    seoDescription: EntryFieldTypes.Text;
-    blocks: EntryFieldTypes.Array<
+    slug: EntryFieldTypes.Symbol;              // required in Contentful
+    title?: EntryFieldTypes.Symbol;
+    seoTitle: EntryFieldTypes.Symbol;              // required in Contentful
+    seoDescription?: EntryFieldTypes.Text;
+    blocks?: EntryFieldTypes.Array<
       EntryFieldTypes.EntryLink<HeroBlockSkeleton | ReviewsBlockSkeleton | LeadCaptureBlockSkeleton>
     >;
   };

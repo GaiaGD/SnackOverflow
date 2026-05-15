@@ -5,11 +5,12 @@ import type { Review } from './ReviewCard';
 export type { Review };
 
 interface ReviewsCarouselProps {
-  title: string;
+  title?: string;
   reviews: Review[];
 }
 
 export default function ReviewsCarousel({ title, reviews }: ReviewsCarouselProps) {
+  if (reviews.length === 0) return null;
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': reviews.map((r) => ({
@@ -28,7 +29,9 @@ export default function ReviewsCarousel({ title, reviews }: ReviewsCarouselProps
       />
 
       <div className="mx-auto max-w-5xl space-y-8">
-        <h2 className="text-3xl font-bold text-brand-yellow text-center">{title}</h2>
+        {title && (
+          <h2 className="text-3xl font-bold text-brand-yellow text-center">{title}</h2>
+        )}
 
         <Carousel label="Customer reviews" slideCount={reviews.length}>
           {reviews.map((review, i) => (

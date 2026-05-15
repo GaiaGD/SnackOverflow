@@ -41,6 +41,8 @@ The balance: page loads are fast because they serve pre-rendered HTML from the C
 ### State Management
 `LeadCaptureForm` holds a single flat `FormState` object in `useState`. Every field is a controlled input. Conditional fields (`financeAck`, `carbFloorAck`) are derived from state rather than stored separately — `showFinanceAck` and `showCarbFloorAck` are computed booleans that gate both rendering and submit-time validation.
 
+`useState` was chosen deliberately over React Hook Form. For this scope — five base fields, two conditional acknowledgements, one validation rule — adding RHF would introduce a dependency without solving a real problem. The threshold for RHF is when the form grows to 10+ fields, validation rules need to be shared with a server-side schema (e.g. Zod), or the codebase standardises on it across multiple forms. At that point the migration is straightforward since the state shape and business logic are already cleanly separated from the form rendering.
+
 ### Sales Routing Payload
 On submit, `computeSalesRoutingPods(state)` derives the routing array:
 - Company size `501-1000` / `1000+`, or interest in `CrumbTrail Analytics` → `enterprise_pod`; otherwise `smb_pod`.
@@ -100,6 +102,7 @@ const pods = [...new Set(rules.filter(r => r.condition(state)).map(r => r.pod))]
 - **Rule engine for sales routing**: formalise the routing logic before the rule count grows, as described above.
 - **Form → CRM integration**: replace the `console.log` with a real POST to HubSpot/Salesforce/etc., with server-side validation, error handling, and retry.
 - **E2E tests**: Playwright smoke tests covering landing page render, CTA → modal open, and form submit flow.
+- **React Hook Form + Zod**: the current form uses `useState` with manual validation. For this scope — one form, five base fields, two conditional acknowledgements — `useState` is the right call. RHF becomes worth the dependency when: (a) the form grows to 10+ fields, (b) validation rules need a shared schema (e.g. Zod) to be reused server-side, or (c) the team standardises on it across multiple forms. Adding it now would be over-engineering.
 - **CSS modules + design tokens over Tailwind**: Tailwind is fast to scaffold but creates friction with designers and makes systematic visual changes harder. The preferred direction is CSS modules per component (already used for Footer) paired with a design token layer — CSS custom properties defined once (`--color-bg`, `--color-accent`, `--color-highlight`) and consumed everywhere. This makes handoff cleaner and a full rebrand a one-file change rather than a grep-and-replace across every component.
 - **Carousel library**: the current `ReviewsCarousel` hand-rolls scroll snapping, keyboard navigation, and focus management. A library like **Embla Carousel** (headless, ~7kb, excellent touch/keyboard support) or **Splide** (slightly heavier but with strong built-in accessibility) would handle this more robustly and allow the component to be truly reusable — accepting `children` rather than being coupled to `Review` data. The carousel should be a generic `<Carousel>` wrapper with `<ReviewCard>` passed as children, not a single monolithic component.
 
