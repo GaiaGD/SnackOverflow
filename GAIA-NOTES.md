@@ -113,7 +113,15 @@ const pods = [...new Set(rules.filter(r => r.condition(state)).map(r => r.pod))]
 ## AI Workflow
 
 **Prompted to AI:**
--
+- The initial scaffolding session (~3pm Day 1) produced the bulk of the core components in one pass: `LeadCaptureForm`, `ReviewsCarousel`, `HeroBlock`, and the Contentful type definitions (`EntrySkeletonType` skeletons for all content types). This gave me a working skeleton to iterate on rather than starting from scratch.
+- `LeadCaptureForm` business logic: the `computeSalesRoutingPods` routing function, conditional acknowledgement fields (Finance dept liability, C.A.R.B. Fleet floor check), and the final payload structure.
+- `str()`, `assetUrl()`, `num()` helper functions in `[slug]/page.tsx` to safely handle Contentful v11's locale-keyed field format and prevent render crashes on missing data.
+- JSON-LD structured data on `ReviewsCarousel` for SEO rich snippets.
+- NOTES.md architecture writeups, scaling considerations, and production readiness sections.
+- Styling passes, color system, Footer CSS-to-Tailwind migration, OG metadata, and 404 page.
 
 **Where I had to course-correct or write logic myself:**
--
+- The Vercel × Contentful starter is built around an articles pattern that had nothing to do with the brief. I worked through the starter's assumptions, then scrapped the articles routing entirely and re-architected around a flexible landing page engine — AI scaffolded on top of the wrong foundation initially.
+- The `[slug]/page.tsx` block renderer needed significant rework after the initial scaffold: the data transformation layer for nested Contentful entries (especially `reviewsBlock` with its linked `review` entries) required manual handling that AI didn't get right the first time.
+- Identified that `revalidateTag("articles")` in the webhook route was a dead-end — the Contentful SDK doesn't use Next.js `fetch()` so cache tags never applied. Rewrote it to `revalidatePath()` with slug extraction from the Contentful webhook payload.
+- Visual QA catches: carousel arrow contrast (white buttons invisible on white cards), favicon triangle issue. Both required human eyes to spot and diagnose.
