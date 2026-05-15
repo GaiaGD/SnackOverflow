@@ -348,7 +348,7 @@ function Field({
         {label}
         {required && <span className="ml-0.5 text-white"> *</span>}
       </label>
-      {isValidElement(children) ? cloneElement(children as React.ReactElement, { id }) : children}
+      {isValidElement(children) ? cloneElement(children as React.ReactElement<{ id: string }>, { id }) : children}
       {error && (
         <p id={errorId} role="alert" className="text-xs text-red-400 mt-1">
           {error}

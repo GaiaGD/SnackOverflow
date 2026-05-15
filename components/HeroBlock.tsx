@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { Climate_Crisis } from 'next/font/google';
 
-const climateCrisis = Climate_Crisis({ subsets: ['latin'], display: 'optional' });
+const climateCrisis = Climate_Crisis({ subsets: ['latin'], display: 'swap', adjustFontFallback: false });
 
 interface HeroBlockProps {
   headline: string;
