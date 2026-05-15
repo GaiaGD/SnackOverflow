@@ -46,6 +46,8 @@ export interface LandingPageSkeleton extends EntrySkeletonType {
   fields: {
     title: EntryFieldTypes.Symbol;
     slug: EntryFieldTypes.Symbol;
+    seoTitle: EntryFieldTypes.Symbol;
+    seoDescription: EntryFieldTypes.Text;
     blocks: EntryFieldTypes.Array<
       EntryFieldTypes.EntryLink<HeroBlockSkeleton | ReviewsBlockSkeleton>
     >;

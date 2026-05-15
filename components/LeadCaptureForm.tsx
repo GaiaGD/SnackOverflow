@@ -236,8 +236,9 @@ export default function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
       )}
 
       <button
+        disabled={!form.firstName || !form.lastName || !form.workEmail || !form.companySize || !form.department || (showFinanceAck && !form.financeAck) || (showCarbFloorAck && !form.carbFloorAck)}
         type="submit"
-        className="w-full rounded-xl bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow hover:bg-orange-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500 transition-colors"
+        className="w-full rounded-xl bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow transition-colors enabled:hover:bg-orange-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500 disabled:cursor-not-allowed disabled:bg-orange-300 disabled:text-white/80 disabled:shadow-none"
       >
         Request Demo
       </button>

@@ -1,10 +1,29 @@
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import { getLandingPageBySlug } from '@/lib/contentful';
 import HeroBlock from '@/components/HeroBlock';
 import ReviewsCarousel from '@/components/ReviewsCarousel';
 import type { Review } from '@/components/ReviewsCarousel';
 
 export const revalidate = 60;
+
+export async function generateMetadata(
+  { params }: { params: { slug: string } }
+): Promise<Metadata> {
+  const page = await getLandingPageBySlug(params.slug).catch(() => null);
+
+  const title = str(page?.fields.seoTitle) || str(page?.fields.title) || 'SnackOverflow';
+  const description = str(page?.fields.seoDescription) || '';
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+    },
+  };
+}
 
 // Contentful v11 can return fields as `string | { [locale]: string }`.
 // This helper always resolves to a plain string.
