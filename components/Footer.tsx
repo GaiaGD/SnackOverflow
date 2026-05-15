@@ -1,22 +1,20 @@
-import styles from './Footer.module.css';
-
 export default function Footer() {
   return (
-    <footer className={styles.footer}>
-      <div className={styles.inner}>
+    <footer className="bg-brand-navy py-12 px-6 border-t border-white/20">
+      <div className="max-w-6xl mx-auto flex flex-col items-center gap-6 text-center">
         <div>
-          <p className={styles.brand}>SnackOverflow</p>
-          <p className={styles.tagline}>Snack solutions for every office</p>
+          <p className="text-xl font-extrabold text-white tracking-tight">SnackOverflow</p>
+          <p className="text-sm text-white/50 mt-1">Snack solutions for every office</p>
         </div>
 
-        <nav className={styles.links} aria-label="Footer navigation">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Contact</a>
-          <a href="#">Careers</a>
+        <nav className="flex flex-wrap gap-8 justify-center" aria-label="Footer navigation">
+          <a href="#" className="text-sm text-white hover:opacity-75 transition-opacity">Privacy Policy</a>
+          <a href="#" className="text-sm text-white hover:opacity-75 transition-opacity">Terms of Service</a>
+          <a href="#" className="text-sm text-white hover:opacity-75 transition-opacity">Contact</a>
+          <a href="#" className="text-sm text-white hover:opacity-75 transition-opacity">Careers</a>
         </nav>
 
-        <p className={styles.copy}>
+        <p className="text-xs text-white/30">
           © {new Date().getFullYear()} SnackOverflow. All rights reserved.
         </p>
       </div>

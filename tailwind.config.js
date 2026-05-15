@@ -9,9 +9,9 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          purple: '#20042b',
-          teal: '#3BCEAC',
+          navy: '#001225',
           yellow: '#FFD23F',
+          mustard: '#C9A227',
         },
       },
       backgroundImage: {
@@ -23,3 +23,4 @@ module.exports = {
   },
   plugins: [],
 }
+

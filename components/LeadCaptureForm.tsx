@@ -137,10 +137,10 @@ export default function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
   if (status === 'success') {
     return (
       <div className="text-center py-10 space-y-4">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brand-teal/20 text-brand-teal text-3xl font-bold">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 text-white text-3xl font-bold">
           ✓
         </div>
-        <h3 className="text-xl font-bold text-brand-yellow">You&apos;re all set!</h3>
+        <h3 className="text-xl font-bold text-white">You&apos;re all set!</h3>
         <p className="text-white/70 max-w-sm mx-auto">
           Thanks for reaching out. Our team will be in touch within 1 business day.
         </p>
@@ -242,7 +242,7 @@ export default function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
                 type="checkbox"
                 checked={form.productInterests.includes(product)}
                 onChange={(e) => handleProductInterestChange(product, e.target.checked)}
-                className="h-4 w-4 rounded border-brand-teal/50 text-brand-teal focus:ring-brand-teal bg-white/10"
+                className="h-4 w-4 rounded border-white/50 text-white focus:ring-white bg-white/10"
               />
               <span className="text-sm text-white/80">{product}</span>
             </label>
@@ -251,33 +251,33 @@ export default function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
       </fieldset>
 
       {showFinanceAck && (
-        <label className="flex items-start gap-3 cursor-pointer rounded-xl bg-brand-yellow/10 border border-brand-yellow/30 p-4">
+        <label className="flex items-start gap-3 cursor-pointer rounded-xl bg-white/10 border border-white/30 p-4">
           <input
             type="checkbox"
             required
             checked={form.financeAck}
             onChange={(e) => setField('financeAck', e.target.checked)}
-            className="mt-0.5 h-4 w-4 rounded border-brand-teal/50 text-brand-teal focus:ring-brand-teal bg-white/10"
+            className="mt-0.5 h-4 w-4 rounded border-white/50 text-white focus:ring-white bg-white/10"
           />
           <span className="text-sm text-white/80">
             I acknowledge that SnackOverflow is not liable for audit errors caused by sugar
-            rushes <span className="text-brand-yellow">*</span>
+            rushes <span className="text-white">*</span>
           </span>
         </label>
       )}
 
       {showCarbFloorAck && (
-        <label className="flex items-start gap-3 cursor-pointer rounded-xl bg-brand-teal/10 border border-brand-teal/30 p-4">
+        <label className="flex items-start gap-3 cursor-pointer rounded-xl bg-white/10 border border-white/30 p-4">
           <input
             type="checkbox"
             required
             checked={form.carbFloorAck}
             onChange={(e) => setField('carbFloorAck', e.target.checked)}
-            className="mt-0.5 h-4 w-4 rounded border-brand-teal/50 text-brand-teal focus:ring-brand-teal bg-white/10"
+            className="mt-0.5 h-4 w-4 rounded border-white/50 text-white focus:ring-white bg-white/10"
           />
           <span className="text-sm text-white/80">
             I confirm our office floors are entirely flat and wheelchair accessible{' '}
-            <span className="text-brand-yellow">*</span>
+            <span className="text-white">*</span>
           </span>
         </label>
       )}
@@ -292,7 +292,7 @@ export default function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
         type="submit"
         disabled={isSubmitDisabled}
         aria-busy={isLoading}
-        className="w-full rounded-xl bg-brand-teal px-6 py-3 text-sm font-semibold text-brand-purple shadow transition-opacity enabled:hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal disabled:cursor-not-allowed disabled:opacity-40 flex items-center justify-center gap-2"
+        className="w-full rounded-xl bg-brand-yellow px-6 py-3 text-sm font-semibold text-brand-navy shadow enabled:hover:bg-brand-mustard focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow disabled:cursor-not-allowed disabled:opacity-40 flex items-center justify-center gap-2 transition-colors duration-200"
       >
         {isLoading ? (
           <>
@@ -326,7 +326,7 @@ function Spinner() {
 }
 
 const inputCls =
-  'w-full rounded-lg border border-brand-teal/40 bg-white/10 px-3 py-2 text-sm text-white shadow-sm placeholder:text-white/40 focus:border-brand-teal focus:outline-none focus:ring-2 focus:ring-brand-teal/30';
+  'w-full rounded-lg border border-white/40 bg-white/10 px-3 py-2 text-sm text-white shadow-sm placeholder:text-white/40 focus:border-white focus:outline-none focus:ring-2 focus:ring-white/30';
 
 function Field({
   label,
@@ -345,7 +345,7 @@ function Field({
     <div className="space-y-1">
       <label className="block text-sm font-medium text-white/80">
         {label}
-        {required && <span className="ml-0.5 text-brand-yellow"> *</span>}
+        {required && <span className="ml-0.5 text-white"> *</span>}
       </label>
       {children}
       {error && (

@@ -13,7 +13,7 @@ interface HeroBlockProps {
 
 export default function HeroBlock({ headline, subheadline, ctaText, ctaUrl, backgroundImageUrl }: HeroBlockProps) {
   return (
-    <section className="relative overflow-hidden bg-brand-purple py-24 px-6">
+    <section className="relative overflow-hidden bg-brand-navy py-24 px-6">
       {backgroundImageUrl && (
         <>
           <Image
@@ -29,7 +29,7 @@ export default function HeroBlock({ headline, subheadline, ctaText, ctaUrl, back
       )}
 
       <div className="relative z-10 mx-auto max-w-3xl text-center space-y-8">
-        <h1 className={`${climateCrisis.className} text-4xl tracking-tight text-brand-yellow sm:text-6xl`}>
+        <h1 className={`${climateCrisis.className} text-4xl tracking-tight text-white sm:text-6xl`}>
           {headline}
         </h1>
         {subheadline && (
@@ -39,7 +39,7 @@ export default function HeroBlock({ headline, subheadline, ctaText, ctaUrl, back
         )}
         <a
           href={ctaUrl || '#lead-form'}
-          className="inline-flex items-center justify-center rounded-2xl bg-brand-teal px-8 py-4 text-base font-semibold text-brand-purple shadow-lg hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal transition-opacity"
+          className="inline-flex items-center justify-center rounded-2xl bg-brand-yellow px-8 py-4 text-base font-semibold text-brand-navy shadow-lg hover:bg-brand-mustard focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow transition-colors duration-200"
         >
           {ctaText || 'Get a Demo'}
         </a>
