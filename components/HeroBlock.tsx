@@ -29,7 +29,7 @@ export default function HeroBlock({ headline, subheadline, ctaText, ctaUrl, back
       )}
 
       <div className="relative z-10 mx-auto max-w-3xl text-center space-y-8">
-        <h1 className={`${climateCrisis.className} text-4xl tracking-tight text-white sm:text-6xl`}>
+        <h1 className={`${climateCrisis.className} text-3xl tracking-tight text-white sm:text-3xl`}>
           {headline}
         </h1>
         {subheadline && (

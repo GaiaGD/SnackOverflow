@@ -6,7 +6,7 @@ const climateCrisis = Climate_Crisis({ subsets: ['latin'] });
 export default function Home() {
   return (
     <main className="flex flex-col items-center justify-center flex-1 px-6 gap-8">
-      <h1 className={`${climateCrisis.className} text-white text-6xl sm:text-8xl lg:text-9xl text-center leading-none`}>
+      <h1 className={`${climateCrisis.className} text-white text-3xl sm:text-8xl lg:text-9xl text-center leading-none`}>
         SnackOverflow
       </h1>
       <Link
