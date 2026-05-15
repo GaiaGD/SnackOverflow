@@ -41,6 +41,13 @@ export interface ReviewsBlockSkeleton extends EntrySkeletonType {
   };
 }
 
+export interface LeadCaptureBlockSkeleton extends EntrySkeletonType {
+  contentTypeId: 'leadCaptureBlock';
+  fields: {
+    title: EntryFieldTypes.Symbol;
+  };
+}
+
 export interface LandingPageSkeleton extends EntrySkeletonType {
   contentTypeId: 'landingPage';
   fields: {
@@ -49,7 +56,7 @@ export interface LandingPageSkeleton extends EntrySkeletonType {
     seoTitle: EntryFieldTypes.Symbol;
     seoDescription: EntryFieldTypes.Text;
     blocks: EntryFieldTypes.Array<
-      EntryFieldTypes.EntryLink<HeroBlockSkeleton | ReviewsBlockSkeleton>
+      EntryFieldTypes.EntryLink<HeroBlockSkeleton | ReviewsBlockSkeleton | LeadCaptureBlockSkeleton>
     >;
   };
 }
@@ -77,4 +84,17 @@ export async function getLandingPageBySlug(
   });
 
   return (result.items[0] as LandingPageEntry) ?? null;
+}
+
+export async function getAllLandingPageSlugs(): Promise<{ slug: string; updatedAt: string }[]> {
+  const result = await contentfulClient.getEntries<LandingPageSkeleton>({
+    content_type: 'landingPage',
+    select: ['fields.slug', 'sys.updatedAt'],
+    limit: 1000,
+  });
+
+  return result.items.map((item) => ({
+    slug: typeof item.fields.slug === 'string' ? item.fields.slug : '',
+    updatedAt: item.sys.updatedAt,
+  }));
 }

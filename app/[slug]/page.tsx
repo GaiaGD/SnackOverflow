@@ -4,6 +4,7 @@ import { getLandingPageBySlug } from '@/lib/contentful';
 import HeroBlock from '@/components/HeroBlock';
 import ReviewsCarousel from '@/components/ReviewsCarousel';
 import type { Review } from '@/components/ReviewsCarousel';
+import LeadCaptureSection from '@/components/LeadCaptureSection';
 
 export const revalidate = 60;
 
@@ -15,10 +16,21 @@ export async function generateMetadata(
   const title = str(page?.fields.seoTitle) || str(page?.fields.title) || 'SnackOverflow';
   const description = str(page?.fields.seoDescription) || '';
 
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? '').replace(/\/$/, '');
+  const url = `${siteUrl}/${params.slug}`;
+
   return {
     title,
     description,
     openGraph: {
+      title,
+      description,
+      type: 'website',
+      url,
+      siteName: 'SnackOverflow',
+    },
+    twitter: {
+      card: 'summary_large_image',
       title,
       description,
     },
@@ -97,6 +109,15 @@ export default async function LandingPage({ params }: { params: { slug: string }
               key={block.sys.id}
               title={str(block.fields.title)}
               reviews={reviews}
+            />
+          );
+        }
+
+        if (contentTypeId === 'leadCaptureBlock') {
+          return (
+            <LeadCaptureSection
+              key={block.sys.id}
+              title={str(block.fields.title)}
             />
           );
         }
