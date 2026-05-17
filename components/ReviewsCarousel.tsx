@@ -30,12 +30,12 @@ export default function ReviewsCarousel({ title, reviews }: ReviewsCarouselProps
 
       <div className="mx-auto max-w-5xl space-y-8">
         {title && (
-          <h2 className="text-3xl font-bold text-white text-center">{title}</h2>
+          <h2 className="text-3xl text-white text-center">{title}</h2>
         )}
 
         <Carousel label="Customer reviews" slideCount={reviews.length}>
           {reviews.map((review, i) => (
-            <li key={review.id} className="flex-none">
+            <li key={review.id} className="flex-none h-full">
               <ReviewCard {...review} index={i} total={reviews.length} />
             </li>
           ))}

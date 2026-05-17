@@ -12,6 +12,8 @@ module.exports = {
           navy: '#001225',
           yellow: '#FFD23F',
           mustard: '#C9A227',
+          coral: '#FF9F80',
+          mint: '#98FFD2',
         },
       },
       backgroundImage: {

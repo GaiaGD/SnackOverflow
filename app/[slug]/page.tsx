@@ -5,6 +5,8 @@ import HeroBlock from '@/components/HeroBlock';
 import ReviewsCarousel from '@/components/ReviewsCarousel';
 import type { Review } from '@/components/ReviewsCarousel';
 import LeadCaptureSection from '@/components/LeadCaptureSection';
+import ProductsBlock from '@/components/ProductsBlock';
+import type { Product } from '@/components/ProductCard';
 
 export const revalidate = 60;
 
@@ -109,6 +111,7 @@ export default async function LandingPage({ params }: { params: { slug: string }
         if (contentTypeId === 'reviewsBlock') {
           const rawReviews = (block.fields.reviews as RawReview[] | undefined) ?? [];
           const reviews: Review[] = rawReviews
+            .filter((r) => r.fields)
             .filter((r) => str(r.fields.authorName) && num(r.fields.starRating) > 0)
             .map((r) => ({
               id: r.sys.id,
@@ -131,6 +134,25 @@ export default async function LandingPage({ params }: { params: { slug: string }
             <LeadCaptureSection
               key={block.sys.id}
               title={str(block.fields.title) || undefined}
+            />
+          );
+        }
+
+        if (contentTypeId === 'productsBlock') {
+          const rawProducts = (block.fields.products as RawReview[] | undefined) ?? [];
+          const products: Product[] = rawProducts
+            .filter((p) => p.fields)
+            .filter((p) => str(p.fields.productTitle))
+            .map((p) => ({
+              id: p.sys.id,
+              productTitle: str(p.fields.productTitle),
+              productDescription: str(p.fields.productDescription) || undefined,
+            }));
+          return (
+            <ProductsBlock
+              key={block.sys.id}
+              title={str(block.fields.title) || undefined}
+              products={products}
             />
           );
         }

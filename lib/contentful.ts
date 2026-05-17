@@ -49,6 +49,22 @@ export interface LeadCaptureBlockSkeleton extends EntrySkeletonType {
   };
 }
 
+export interface ProductCardSkeleton extends EntrySkeletonType {
+  contentTypeId: 'productCard';
+  fields: {
+    productTitle: EntryFieldTypes.Symbol;
+    productDescription?: EntryFieldTypes.Symbol;
+  };
+}
+
+export interface ProductsBlockSkeleton extends EntrySkeletonType {
+  contentTypeId: 'productsBlock';
+  fields: {
+    title?: EntryFieldTypes.Symbol;
+    products: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<ProductCardSkeleton>>;
+  };
+}
+
 export interface LandingPageSkeleton extends EntrySkeletonType {
   contentTypeId: 'landingPage';
   fields: {
@@ -57,7 +73,7 @@ export interface LandingPageSkeleton extends EntrySkeletonType {
     seoTitle: EntryFieldTypes.Symbol;              // required in Contentful
     seoDescription?: EntryFieldTypes.Text;
     blocks?: EntryFieldTypes.Array<
-      EntryFieldTypes.EntryLink<HeroBlockSkeleton | ReviewsBlockSkeleton | LeadCaptureBlockSkeleton>
+      EntryFieldTypes.EntryLink<HeroBlockSkeleton | ReviewsBlockSkeleton | LeadCaptureBlockSkeleton | ProductsBlockSkeleton>
     >;
   };
 }

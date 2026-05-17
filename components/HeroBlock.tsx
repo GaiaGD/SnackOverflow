@@ -1,7 +1,6 @@
 import Image from 'next/image';
-import { Climate_Crisis } from 'next/font/google';
-
-const climateCrisis = Climate_Crisis({ subsets: ['latin'], display: 'optional' });
+import { climateCrisis } from '@/lib/fonts';
+import CtaButton from './CtaButton';
 
 interface HeroBlockProps {
   headline: string;
@@ -12,13 +11,8 @@ interface HeroBlockProps {
 }
 
 export default function HeroBlock({ headline, subheadline, ctaText, ctaUrl, backgroundImageUrl }: HeroBlockProps) {
-  const rawHref = ctaUrl || '#lead-form';
-  const isExternal = /^https?:\/\//i.test(rawHref);
-  const isRelative = rawHref.startsWith('#') || rawHref.startsWith('/');
-  const href = !isExternal && !isRelative ? `https://${rawHref}` : rawHref;
-
   return (
-    <section className="relative overflow-hidden bg-brand-navy py-24 px-6">
+    <section className="relative overflow-hidden bg-brand-navy min-h-[560px] flex items-center px-6 py-16">
       {backgroundImageUrl && (
         <>
           <Image
@@ -33,7 +27,7 @@ export default function HeroBlock({ headline, subheadline, ctaText, ctaUrl, back
         </>
       )}
 
-      <div className="relative z-10 mx-auto max-w-3xl text-center space-y-8">
+      <div className="relative z-10 mx-auto w-full max-w-3xl text-center space-y-8">
         <h1 className={`${climateCrisis.className} text-3xl tracking-tight text-white sm:text-6xl`}>
           {headline}
         </h1>
@@ -42,14 +36,9 @@ export default function HeroBlock({ headline, subheadline, ctaText, ctaUrl, back
             {subheadline}
           </p>
         )}
-        <a
-          href={href}
-          target={isExternal ? '_blank' : undefined}
-          rel={isExternal ? 'noopener noreferrer' : undefined}
-          className="inline-flex items-center justify-center rounded-2xl bg-brand-yellow px-8 py-4 text-base font-semibold text-brand-navy shadow-lg hover:bg-brand-mustard focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow transition-colors duration-200"
-        >
-          {ctaText || 'Get a Demo'}
-        </a>
+        <CtaButton href={ctaUrl}>
+          {ctaText}
+        </CtaButton>
       </div>
     </section>
   );

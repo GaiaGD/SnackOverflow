@@ -35,11 +35,11 @@ export default function ReviewCard({ authorName, authorTitle, quote, starRating,
       aria-roledescription="slide"
       aria-label={`${authorName}, review ${index + 1} of ${total}`}
       tabIndex={0}
-      className="w-80 rounded-2xl bg-white p-6 shadow-sm"
+      className="w-80 rounded-2xl bg-white p-6 shadow-sm h-full flex flex-col"
     >
       <StarRating rating={starRating} />
       {quote && (
-        <blockquote className="mt-4 text-brand-navy/80 text-sm leading-relaxed">
+        <blockquote className="mt-4 text-brand-navy/80 text-sm leading-relaxed line-clamp-[10] grow">
           {quote}
         </blockquote>
       )}

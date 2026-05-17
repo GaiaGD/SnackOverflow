@@ -1,9 +1,11 @@
+import { climateCrisis } from '@/lib/fonts';
+
 export default function Footer() {
   return (
     <footer className="bg-brand-navy py-12 px-6 border-t border-white/20">
       <div className="max-w-6xl mx-auto flex flex-col items-center gap-6 text-center">
         <div>
-          <p className="text-xl font-extrabold text-white tracking-tight">SnackOverflow</p>
+          <p className={`text-xl font-extrabold text-white tracking-tight ${climateCrisis.className}`}>SnackOverflow</p>
           <p className="text-sm text-white/50 mt-1">Snack solutions for every office</p>
         </div>
 

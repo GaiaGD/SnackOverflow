@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useId, ChangeEvent, FormEvent, cloneElement, isValidElement } from 'react';
+import CtaButton from './CtaButton';
 
 type CompanySize = '1-50' | '51-200' | '201-500' | '501-1000' | '1000+';
 type Department =
@@ -152,7 +153,7 @@ export default function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
     isLoading ||
     !form.firstName ||
     !form.lastName ||
-    !form.workEmail ||
+    !!validateEmail(form.workEmail) ||
     !form.companySize ||
     !form.department ||
     (showFinanceAck && !form.financeAck) ||
@@ -288,12 +289,7 @@ export default function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
         </p>
       )}
 
-      <button
-        type="submit"
-        disabled={isSubmitDisabled}
-        aria-busy={isLoading}
-        className="w-full rounded-xl bg-brand-yellow px-6 py-3 text-sm font-semibold text-brand-navy shadow enabled:hover:bg-brand-mustard focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow disabled:cursor-not-allowed disabled:opacity-40 flex items-center justify-center gap-2 transition-colors duration-200"
-      >
+      <CtaButton disabled={isSubmitDisabled} aria-busy={isLoading}>
         {isLoading ? (
           <>
             <Spinner />
@@ -302,7 +298,7 @@ export default function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
         ) : (
           'Request Demo'
         )}
-      </button>
+      </CtaButton>
     </form>
   );
 }

@@ -1,9 +1,9 @@
-import { Inter } from 'next/font/google'
+import { IBM_Plex_Sans } from 'next/font/google'
 import Script from 'next/script'
 import Footer from '@/components/Footer'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const ibmPlexSans = IBM_Plex_Sans({ subsets: ['latin'], weight: ['400', '500', '600', '700'], display: 'optional' })
 
 export const metadata = {
   title: 'SnackOverflow',
@@ -37,8 +37,8 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} min-h-screen flex flex-col justify-between`}>
+    <html lang="en" className="scroll-smooth">
+      <body className={`${ibmPlexSans.className} min-h-screen flex flex-col justify-between`}>
         {children}
         <Footer />
         <Script
