@@ -1,3 +1,5 @@
+'use client';
+
 import { ReactNode } from 'react';
 
 const baseCls =
@@ -37,6 +39,7 @@ export default function CtaButton(props: CtaButtonProps) {
         target={isExternal ? '_blank' : undefined}
         rel={isExternal ? 'noopener noreferrer' : undefined}
         className={`${baseCls} rounded-2xl px-8 py-4 text-base shadow-lg hover:bg-brand-mustard ${className}`}
+        onClick={() => gtag('event', 'cta_click', { cta_text: String(children), cta_url: href })}
       >
         {children}
       </a>

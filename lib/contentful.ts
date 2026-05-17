@@ -80,9 +80,6 @@ export interface LandingPageSkeleton extends EntrySkeletonType {
 
 // ---------- Typed Entry aliases ----------
 
-export type HeroBlockEntry = Entry<HeroBlockSkeleton>;
-export type ReviewsBlockEntry = Entry<ReviewsBlockSkeleton>;
-export type ReviewEntry = Entry<ReviewSkeleton>;
 export type LandingPageEntry = Entry<LandingPageSkeleton>;
 
 // ---------- Fetch helpers ----------

@@ -2,6 +2,9 @@
 
 ## Architecture & Rendering
 
+### URLs
+The deliverable URL uses a slug (e.g. `/b2b`) to make it explicit that the dynamic page engine is what's being evaluated — `app/[slug]/page.tsx` handles all landing pages. The root `/` homepage exists purely as an entry point for reviewers and is a static Next.js route, separate from the CMS-driven architecture.
+
 ### Dynamic Page Engine
 The site is built on a block-based CMS architecture using Contentful's `landingPage` content type. Each page is composed of an ordered `blocks` array — currently supporting `heroBlock` and `reviewsBlock` — which the `app/[slug]/page.tsx` server component iterates and maps to React components.
 
@@ -117,15 +120,20 @@ const pods = [...new Set(rules.filter(r => r.condition(state)).map(r => r.pod))]
 ## AI Workflow
 
 **Prompted to AI:**
-- The initial scaffolding session (~3pm Day 1) produced the bulk of the core components in one pass: `LeadCaptureForm`, `ReviewsCarousel`, `HeroBlock`, and the Contentful type definitions (`EntrySkeletonType` skeletons for all content types). This gave me a working skeleton to iterate on rather than starting from scratch.
+- The initial scaffolding session produced the bulk of the core components in one pass: `LeadCaptureForm`, `ReviewsCarousel`, `HeroBlock`, and the Contentful type definitions (`EntrySkeletonType` skeletons for all content types). This gave me a working skeleton to iterate on rather than starting from scratch.
 - `LeadCaptureForm` business logic: the `computeSalesRoutingPods` routing function, conditional acknowledgement fields (Finance dept liability, C.A.R.B. Fleet floor check), and the final payload structure.
 - `str()`, `assetUrl()`, `num()` helper functions in `[slug]/page.tsx` to safely handle Contentful v11's locale-keyed field format and prevent render crashes on missing data.
 - JSON-LD structured data on `ReviewsCarousel` for SEO rich snippets.
 - NOTES.md architecture writeups, scaling considerations, and production readiness sections.
 - Styling passes, color system, Footer CSS-to-Tailwind migration, OG metadata, and 404 page.
+- `CtaButton` component: prompted AI to extract the CTA into a reusable component that renders as `<a>` when an `href` is provided and `<button>` otherwise — keeping HTML semantics correct across both the hero and the form submit contexts.
+- `ProductsBlock` and `ProductCard`: prompted AI to scaffold the new block following the existing pattern, including the unpublished-entry guard and typed Contentful skeletons.
 
 **Where I had to course-correct or write logic myself:**
 - The Vercel × Contentful starter is built around an articles pattern that had nothing to do with the brief. I worked through the starter's assumptions, then scrapped the articles routing entirely and re-architected around a flexible landing page engine — AI scaffolded on top of the wrong foundation initially.
 - The `[slug]/page.tsx` block renderer needed significant rework after the initial scaffold: the data transformation layer for nested Contentful entries (especially `reviewsBlock` with its linked `review` entries) required manual handling that AI didn't get right the first time.
 - Identified that `revalidateTag("articles")` in the webhook route was a dead-end — the Contentful SDK doesn't use Next.js `fetch()` so cache tags never applied. Rewrote it to `revalidatePath()` with slug extraction from the Contentful webhook payload.
 - Visual QA catches: carousel arrow contrast (white buttons invisible on white cards), favicon triangle issue. Both required human eyes to spot and diagnose.
+- **CTA as a Contentful content type**: I initially explored making `CtaButton` a standalone Contentful content type (a reusable reference that multiple blocks could link to). After testing the editor experience, I decided against it — the extra step of creating the entry separately before referencing it adds friction for editors without real benefit at this scale. Kept `ctaText`/`ctaUrl` as flat fields on the hero block and noted the pattern as a future consideration.
+- **Email validation bug**: caught that the submit button could be clicked with a malformed email because `isSubmitDisabled` only checked `!form.workEmail` (non-empty), not format validity. Fixed by replacing it with `!!validateEmail(form.workEmail)`, which covers both empty and malformed inputs.
+- **Unpublished Contentful entries**: discovered that unpublished linked entries are returned as unresolved link objects with no `fields` property, causing a runtime crash. Added a `.filter((r) => r.fields)` guard before any field access in the block renderer.

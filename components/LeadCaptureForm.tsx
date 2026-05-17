@@ -129,6 +129,7 @@ export default function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
 
       setStatus('success');
       onSuccess?.();
+      gtag('event', 'generate_lead');
     } catch {
       setStatus('error');
       setSubmitError('Something went wrong. Please try again.');
