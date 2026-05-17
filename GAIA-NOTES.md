@@ -18,7 +18,7 @@ Pages are fetched server-side using Contentful's REST client and statically cach
 The balance: page loads are fast because they serve pre-rendered HTML from the CDN edge. Marketing's speed-to-publish is handled by on-demand revalidation, not by shrinking the revalidation window.
 
 ### Performance
-- **Server components by default**: all data fetching is server-side. `'use client'` is scoped only to components that need browser APIs — ReviewsCarousel (Embla scroll/keyboard), LeadCaptureForm (form state).
+- **Server components by default**: all data fetching is server-side. `'use client'` is scoped only to components that need browser APIs — ReviewsCarousel (Embla scroll/keyboard), LeadCaptureForm (form state), CtaButton (GA4 click event).
 - **Image optimization**: `next/image` is configured with Contentful's CDN (`images.ctfassets.net`) whitelisted in `remotePatterns`. Plain `<img>` tags should not be used.
 - **Loading state**: `app/[slug]/loading.tsx` provides a skeleton mirroring the Hero + Reviews layout, shown automatically by Next.js on cache misses.
 
@@ -78,9 +78,9 @@ const pods = [...new Set(rules.filter(r => r.condition(state)).map(r => r.pod))]
 - **Core Web Vitals**: Vercel Analytics or a RUM tool to track LCP, CLS, FID with real user data, not just Lighthouse scores.
 
 ### Marketing
-- **GA4** is already instrumented. Next step is custom events:
-  - CTA button click → `cta_click`
-  - Demo form submission → `generate_lead` (GA4's recommended lead gen event)
+- **GA4** is instrumented with two custom events:
+  - CTA button click → `cta_click` (fires with `cta_text` and `cta_url` parameters, so Marketing can measure click-through rate per label and test copy changes via Contentful without a code deploy)
+  - Demo form submission → `generate_lead` (GA4's recommended lead gen event, fires on successful submission so GA4 can attribute conversions back to their traffic source)
 - **Funnel analysis**: GA4 Explore → Funnel exploration: page view → CTA click → form submit → success. Identifies exactly where drop-off happens.
 - **Conversion rate by slug**: since multiple landing pages may exist, segment by `page_path` to compare which CMS content drives more leads.
 
