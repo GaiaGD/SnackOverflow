@@ -1,4 +1,4 @@
-# SnackOverflow
+# SnackOverflow 🍪
 
 A Next.js marketing site for SnackOverflow — an enterprise B2B SaaS platform for predictive office snack supply chain management. Built as a take-home assignment.
 
